@@ -1,0 +1,7 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |
+    (c) => ({ command: 'uv', args: ['run', '--directory', '/app/domain-data-mcp', 'server.py'] })
