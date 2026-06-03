@@ -1,42 +1,59 @@
-# Domain Data MCP Server
+# Domain Intelligence MCP
 
-An MCP (Model Context Protocol) server for combined domain intelligence. Aggregates DNS records, WHOIS registration data, and SSL certificate status into a single query.
+Domain intelligence for AI agents — WHOIS registration, DNS records, and SSL certificate data combined into a single lookup. Zero API keys required.
 
-## Data Sources
+## What your agent can do
 
-- **DNS**: Google DNS-over-HTTPS API (dns.google)
-- **WHOIS**: python-whois library
-- **SSL**: Python's built-in ssl + socket modules
+- Look up who owns any domain (WHOIS registrant, registrar, creation/expiry dates)
+- Check DNS records (A, AAAA, MX, NS, CNAME, TXT)
+- Inspect SSL certificates (issuer, expiry date, days remaining)
+- Get a summary overview in the same response (record count, SSL validity, WHOIS availability)
 
 ## Tools
 
-### `get_domain_info(domain, port?)`
-Retrieve comprehensive domain intelligence in one call.
-
-- **domain** (string): The domain name to investigate (e.g., `example.com`)
-- **port** (integer, optional): TCP port for SSL check (default: 443)
-
-Returns an object with:
-- **whois**: Registrar, creation/expiry dates, name servers, domain status
-- **dns**: All DNS record types (A, AAAA, MX, NS, CNAME, TXT)
-- **ssl**: Certificate validity, issuer, expiry, days remaining
-- **summary**: Quick overview with record count, SSL validity, WHOIS availability
+| Tool | Description |
+|------|-------------|
+| `get_domain_info` | WHOIS registration, all DNS record types, SSL certificate status, and a summary — all in one call |
 
 ## Installation
 
-```bash
-pip install -r requirements.txt
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "domain-data": {
+      "command": "python",
+      "args": ["/path/to/server.py"]
+    }
+  }
+}
 ```
 
-## Usage
+### Dependencies
 
 ```bash
+pip install -r requirements.txt
 python server.py
 ```
 
-## Deployment with Smithery
+### Cursor / VS Code
 
-The `smithery.yaml` file is included for deployment on [Smithery](https://smithery.ai). Configure the start command to point to this directory.
+Same config structure in your MCP settings JSON, pointing to `server.py`.
+
+## Example
+
+```
+get_domain_info("example.com")
+```
+
+Returns an object with:
+- `whois` — registrar, creation/expiry dates, name servers, status
+- `dns` — all record types (A, AAAA, MX, NS, CNAME, TXT)
+- `ssl` — issuer, expiry, days remaining, validity
+- `summary` — quick overview with record count and SSL status
 
 ## Pricing
 
@@ -47,6 +64,16 @@ The `smithery.yaml` file is included for deployment on [Smithery](https://smithe
 
 [Subscribe to Pro](https://buy.stripe.com/dRm6oJ4Hd2Jugek0wz1oI0m)
 
+## Data Sources
+
+- **DNS**: Google DNS-over-HTTPS API (dns.google)
+- **WHOIS**: python-whois library
+- **SSL**: Python's built-in ssl + socket modules
+
+## Deployment with Smithery
+
+The `smithery.yaml` file is included for deployment on [Smithery](https://smithery.ai).
+
 ## License
 
-MIT
+MIT © AgentPay Labs
